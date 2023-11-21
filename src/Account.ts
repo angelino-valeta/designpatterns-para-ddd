@@ -19,7 +19,11 @@ export default class Account {
     this.balance += amount
    }
 
+   public debit(amount: number){
+    this.balance -= amount
+   }
+
    public getBalance(){
     return this.balance
    }
-}
+} 
