@@ -25,6 +25,7 @@ test("Deve criar uma conta e fazer um  crédito", function () {
     .setAccount("123456-7")
     .build()
 
+
   // account.credit(1000)
   const creditCommand = new CreditCommand(account, 1000)
   creditCommand.execute();
