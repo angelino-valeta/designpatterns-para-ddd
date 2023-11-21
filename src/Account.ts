@@ -1,18 +1,22 @@
+import AccountBuilder from "./AccountBuilder";
+
 export default class Account {
-   bank: string;
-   branch: string;
-   account: string
-   private balance: number = 0.0
+   bank: string | undefined;
+   branch: string | undefined;
+   account: string | undefined;
+   document: string | undefined;
+   balance: number;
 
-
-   constructor(bank: string, brach: string, account: string){
-    this.bank = bank;
-    this.branch = brach;
-    this.account = account
+   constructor(accountBuilder: AccountBuilder){
+    this.bank = accountBuilder.bank;
+    this.branch = accountBuilder.branch;
+    this.account = accountBuilder.account
+    this.document = accountBuilder.document
+    this.balance = 0
    }
 
-   public credit(balance: number){
-    this.balance = balance
+   public credit(amount: number){
+    this.balance += amount
    }
 
    public getBalance(){
