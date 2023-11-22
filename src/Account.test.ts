@@ -1,9 +1,20 @@
+import AccountApplicationService from "./AccountApplicationService"
 import AccountBuilder from "./AccountBuilder"
+import AccountRepositoryMemory from "./AccountRepositoryMemory"
 import CreditCommand from "./CreditCommand"
+import CreditHandler from "./CreditHandler"
 import DebitCommand from "./DebitCommand"
-import TransferCommand from "./TransferCommand"
-import TransferService from "./TransferService"
+import Publisher from "./Publisher"
+import TransferCommand from "./TransferCommand" 
 
+let service: AccountApplicationService;
+
+beforeEach(function(){
+  const publisher = new Publisher()
+  const accountRepository = new AccountRepositoryMemory();
+  publisher.register(new CreditHandler(accountRepository))
+  service = new AccountApplicationService(publisher, accountRepository)
+})
 
 test("Deve criar uma conta", function () {
   const account = new AccountBuilder("111.111.11-11")
@@ -13,22 +24,16 @@ test("Deve criar uma conta", function () {
     .build()
 
   //account.credit(0)
-  const creditCommand = new CreditCommand(account, 0)
-  creditCommand.execute()
+  // const creditCommand = new CreditCommand(account, 0)
+  // creditCommand.execute()
   expect(account.getBalance()).toBe(0)
 })
 
 test("Deve criar uma conta e fazer um  crédito", function () {
-  const account = new AccountBuilder("111.111.11-11")
-    .setBank("033")
-    .setBranch("0001")
-    .setAccount("123456-7")
-    .build()
 
-
-  // account.credit(1000)
-  const creditCommand = new CreditCommand(account, 1000)
-  creditCommand.execute();
+  service.create("111.111.11-11")
+  service.credit("111.111.11-11", 1000)
+  const account = service.get("111.111.11-11")
   expect(account.getBalance()).toBe(1000)
 })
 
@@ -41,11 +46,11 @@ test("Deve criar uma conta e fazer um débito", function () {
     .build()
 
   //account.credit(1000)
-  const creditCommand = new CreditCommand(account, 1000)
-  creditCommand.execute()
+  // const creditCommand = new CreditCommand(account, 1000)
+  // creditCommand.execute()
   expect(account.getBalance()).toBe(1000)
   const debitCommand = new DebitCommand(account, 500)
-  debitCommand.execute()
+  // debitCommand.execute()
   //account.debit(500)
   expect(account.getBalance()).toBe(500)
 })
@@ -64,11 +69,11 @@ test("Deve criar duas contas e fazer uma transferência", function () {
     .build()
 
   // accountFrom.credit(1000)
-  const creditCommandFrom = new CreditCommand(accountFrom, 1000);
-  creditCommandFrom.execute()
+  // const creditCommandFrom = new CreditCommand(accountFrom, 1000);
+  // creditCommandFrom.execute()
   // accountTo.credit(500)
-  const creditCommadTo = new CreditCommand(accountTo, 500)
-  creditCommadTo.execute()
+  // const creditCommadTo = new CreditCommand(accountTo, 500)
+  // creditCommadTo.execute()
 
   // const transferService = new TransferService();
   // transferService.transfer(accountFrom, accountTo, 700);
